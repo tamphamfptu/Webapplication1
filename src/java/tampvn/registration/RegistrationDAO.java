@@ -172,39 +172,37 @@ public class RegistrationDAO implements Serializable {
         return false;
     }
 
-    public boolean updateAccount(String username)
+    public boolean updateAccount(String username, String password, boolean isAdmin)
             throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
-        try {
-            //1. connect DB 
-            con = DBHelper.makeConnection();
+//        try {
+        //1. connect DB 
+        con = DBHelper.makeConnection();
 
-            //2. Create SQL Statement string 
-            String sql = "Update Registration "
-                    + "SET password = ?, isAdmin = ? "
-                    + "Where username = ?";
-            //3. Create statement to set sql
-            stm = con.prepareStatement(username);
-            stm.setString(1, username);
+        //2. Create SQL Statement string 
+        String sql = "Update Registration "
+                + "SET password = ?, isAdmin = ? "
+                + "Where username = ?";
+        //3. Create statement to set sql
+        stm = con.prepareStatement(sql);
+        stm.setString(1, password);
+        stm.setBoolean(2, isAdmin);
+        stm.setString(3, username);
 
-            int effectedRow = stm.executeUpdate();
-            if (effectedRow > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        } finally {
+        int effectedRow = stm.executeUpdate();
 
-            if (stm != null) {
-                stm.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-            return false;
+        if (effectedRow > 0) {
+            return true;
         }
+//        }   finally {
+//
+//            if (stm != null) {
+//                stm.close();
+//            }
+//            if (con != null) {
+//                con.close();
+//            }
+        return false;
     }
 }

@@ -26,7 +26,7 @@ import tampvn.registration.RegistrationDTO;
 @WebServlet(name = "SearchServlet", urlPatterns = {"/SearchServlet"})
 public class SearchLastnameServlet extends HttpServlet {
 
-    private final String SEARCH_PAGE = "search.html";
+    private final String SEARCH_PAGE = "search.jsp";
     private final String SEARCH_RESULT_PAGE = "search.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)

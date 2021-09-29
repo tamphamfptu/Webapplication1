@@ -16,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import tampvn.registration.RegistrationDAO;
 import tampvn.utils.DBHelper;
 
@@ -25,7 +26,7 @@ import tampvn.utils.DBHelper;
  */
 public class LoginServlet extends HttpServlet {
 
-    private final String SEARCH_PAGE = "search.html";
+    private final String SEARCH_PAGE = "search.jsp";
     private final String INVALID_PAGE = "invalid.html";
 
     protected void processRequest(HttpServletRequest request,
@@ -47,10 +48,19 @@ public class LoginServlet extends HttpServlet {
 
             if (result) {
                 url = SEARCH_PAGE;
+                
+                //Mo session get username 
+                HttpSession session = request.getSession();
+                session.setAttribute("USERNAME", username);
+                
+                //get full name from username via DAO
+                //session.setAttribute("FULLNAME", fullName)
+                
+                
                 //add cookies to client using resObj
-                Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(60 * 3);
-                response.addCookie(cookie);
+//                Cookie cookie = new Cookie(username, password);
+//                cookie.setMaxAge(60 * 3);
+//                response.addCookie(cookie);
             }
         } catch (NamingException ex) {
             ex.printStackTrace();

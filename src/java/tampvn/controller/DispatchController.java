@@ -27,7 +27,9 @@ public class DispatchController extends HttpServlet {
    private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
    private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateAccountServlet";
    private final String PROCESS_REQUEST_CONTROLLER = "ProcessRequestServlet";
-   private final String ADD_ITEM_TO_CART_CONTROLLER = "ProcessRequestServlet";
+   private final String ADD_ITEM_TO_CART_CONTROLLER = "AddItemToCartServlet";
+   private final String VIEW_CART_PAGE = "viewCart.jsp";
+   private final String REMOVE_ITEM_FROM_CART_CONTROLLER = "RemoveItemFromCartServlet";
    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -47,10 +49,14 @@ public class DispatchController extends HttpServlet {
                url = SEARCH_LASTNAME_CONTROLLER;
            }else if(button.equals("Delete")){
                url = DELETE_ACCOUNT_CONTROLLER;
-           }else if(button.endsWith("Update")){
+           }else if(button.equals("Update")){
                 url = UPDATE_ACCOUNT_CONTROLLER;
            }else if (button.equals("Add Item to your cart")){
                url = ADD_ITEM_TO_CART_CONTROLLER;
+           }else if (button.equals("View your cart")){
+               url = VIEW_CART_PAGE;
+           }else if (button.equals("Remove Selected Items")){
+               url = REMOVE_ITEM_FROM_CART_CONTROLLER;
            }
         }finally{
             RequestDispatcher rd = request.getRequestDispatcher(url);

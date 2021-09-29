@@ -7,58 +7,64 @@ package tampvn.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import tampvn.registration.RegistrationDAO;
+import javax.servlet.http.HttpSession;
+import tampvn.cart.CartObject;
 
 /**
  *
  * @author Polaris
  */
-@WebServlet(name = "UpdateAccountServlet", urlPatterns = {"/UpdateAccountServlet"})
-public class UpdateAccountServlet extends HttpServlet {
+@WebServlet(name = "RemoveItemFromCartServlet", urlPatterns = {"/RemoveItemFromCartServlet"})
+public class RemoveItemFromCartServlet extends HttpServlet {
 
-   private final String ERROR_PAGE = "error.html";
-   
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException  {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        String username = request.getParameter("txtUsername");
-        String password = request.getParameter("txtPassword");
-        String role = request.getParameter("chkAdmin");
-        String searchValue = request.getParameter("lastSearchValue");
-        String url = ERROR_PAGE;
-        boolean isAdmin = false;
-        if (role != null) {
-            isAdmin = true;
-        }
-        try{
+        try {
+           //1. Customers go to cart place 
+            HttpSession session = request.getSession(false);
+            if(session != null){
+                //2. Customer takes cart
+                CartObject cart = (CartObject) session.getAttribute("CART");
+                if(cart != null){
+                    //3. Customer takes items
+                    Map<String, Integer> items = cart.getItems();
+                    if(items != null){
+                        //4. Get all selected items 
+                        //lay chuoi String 
+                        String[]  removedItems = request.getParameterValues("chkItem");
+                        if(removedItems != null){
+                            //5. Remove each item for cart
+                            for(String item : removedItems){
+                                cart.removeItemFromCart(item);
+                            }//end traverse each item 
+                            session.setAttribute("CART", cart);
+                        }// end removedItems had choiced
+                    }//end items have existed
+                }//end if cart has existed
+            }//session has existed
+        }finally{
+            //6. refresh = call view cart 
+            String urlRewritting = "DispatchController"
+                    + "?btnAction=View your cart";
             
-            //call DAO 
-            RegistrationDAO dao = new RegistrationDAO();
-            
-            boolean result = dao.updateAccount(username, password,isAdmin);
-            
-            if(result){
-                url = "DispatchController?"
-                        +"btnAction=Search"
-                        +"&txtSearchValue=" + searchValue;
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }catch(NamingException ex){
-            ex.printStackTrace();
-        }
-        finally{
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            response.sendRedirect(urlRewritting);
         }
     }
 
