@@ -30,6 +30,7 @@ public class DispatchController extends HttpServlet {
    private final String ADD_ITEM_TO_CART_CONTROLLER = "AddItemToCartServlet";
    private final String VIEW_CART_PAGE = "viewCart.jsp";
    private final String REMOVE_ITEM_FROM_CART_CONTROLLER = "RemoveItemFromCartServlet";
+   private final String CREATE_NEW_ACCOUNT_CONTROLLER = "CreateNewAccountServlet";
    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -57,6 +58,8 @@ public class DispatchController extends HttpServlet {
                url = VIEW_CART_PAGE;
            }else if (button.equals("Remove Selected Items")){
                url = REMOVE_ITEM_FROM_CART_CONTROLLER;
+           }else if (button.equals("Create New Account")){
+               url = CREATE_NEW_ACCOUNT_CONTROLLER;
            }
         }finally{
             RequestDispatcher rd = request.getRequestDispatcher(url);

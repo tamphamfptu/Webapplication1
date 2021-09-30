@@ -176,33 +176,76 @@ public class RegistrationDAO implements Serializable {
             throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
-//        try {
-        //1. connect DB 
-        con = DBHelper.makeConnection();
+        try {
+            //1. connect DB 
+            con = DBHelper.makeConnection();
 
-        //2. Create SQL Statement string 
-        String sql = "Update Registration "
-                + "SET password = ?, isAdmin = ? "
-                + "Where username = ?";
-        //3. Create statement to set sql
-        stm = con.prepareStatement(sql);
-        stm.setString(1, password);
-        stm.setBoolean(2, isAdmin);
-        stm.setString(3, username);
+            //2. Create SQL Statement string 
+            String sql = "Update Registration "
+                    + "SET password = ?, isAdmin = ? "
+                    + "Where username = ?";
+            //3. Create statement to set sql
+            stm = con.prepareStatement(sql);
+            stm.setString(1, password);
+            stm.setBoolean(2, isAdmin);
+            stm.setString(3, username);
 
-        int effectedRow = stm.executeUpdate();
+            int effectedRow = stm.executeUpdate();
 
-        if (effectedRow > 0) {
-            return true;
+            if (effectedRow > 0) {
+                return true;
+            }
+        } finally {
+
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+            
         }
-//        }   finally {
-//
-//            if (stm != null) {
-//                stm.close();
-//            }
-//            if (con != null) {
-//                con.close();
-//            }
+        return false;
+    }
+    
+    public boolean createAccount(RegistrationDTO dto)
+        throws SQLException, NamingException{
+        Connection con = null;
+        PreparedStatement stm = null;
+        
+        if(dto == null){
+            return false;
+        }//end dto is not existed
+        
+        try {
+            //1. connect DB 
+            con = DBHelper.makeConnection();
+
+            //2. Create SQL Statement string 
+            String sql = "Insert into Registration(username, password, lastname, isAdmin) "
+                    +"Values(?, ?, ?, ?)";
+            //3. Create statement to set sql
+            stm = con.prepareStatement(sql);
+            stm.setString(1, dto.getUsername());
+            stm.setString(2, dto.getPassword());
+            stm.setString(3, dto.getLastname());
+            stm.setBoolean(4, dto.isRole());
+            
+            int effectedRow = stm.executeUpdate();
+
+            if (effectedRow > 0) {
+                return true;
+            }
+        } finally {
+
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+            
+        }
         return false;
     }
 }
